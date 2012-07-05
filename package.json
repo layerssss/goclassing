@@ -1,0 +1,10 @@
+{
+    "name": "goclassing"
+  , "version": "0.0.1"
+  , "private": true
+  , "dependencies": {
+      "express": "latest"
+    , "jade": "latest"
+    , "less": "latest"
+  }
+}
