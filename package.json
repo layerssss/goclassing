@@ -8,5 +8,6 @@
     , "less": "latest"
     , "coffee-script": "latest"
     , "async": "latest"
+    , "fs.extra":"latest"
   }
 }
