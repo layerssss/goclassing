@@ -3,20 +3,22 @@ routes = require('./routes')
 fs=require('fs.extra')
 path=require('path')
 
-if process.argv[2]=='dev'
-  viewsDir=path.join __dirname,'views/'
-  fs.readdirSync(viewsDir).forEach (f)->
-    if !f.match '.jade$'
-      false
-    target=viewsDir+f.substring(0,f.length-4)+'htm'
-    if fs.existsSync target
-      fs.unlinkSync target
-    fs.copy path.join(__dirname,'page.debug.htm'),target
-  require('./libs').get()
-  return
-if process.argv[2]=='deploy'
-  require('./libs').deploy()
-  return
+switch process.argv[2]
+  when 'dev'
+    viewsDir=path.join __dirname,'views/'
+    fs.readdirSync(viewsDir).forEach (f)->
+      if !f.match '.jade$'
+        return
+      target=viewsDir+f.substring(0,f.length-4)+'htm'
+      if fs.existsSync target
+        fs.unlinkSync target
+      fs.copy path.join(__dirname,'page.debug.htm'),target
+    return
+  when 'libs'
+    require('./libs').get()
+  when 'deploy'
+    require('./libs').deploy()
+    return
 app = module.exports = express.createServer();
 
 
