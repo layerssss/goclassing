@@ -6,8 +6,7 @@
       "express": "latest"
     , "jade": "latest"
     , "less": "latest"
-    , "coffee-script": "latest"
-    , "async": "latest"
+    , "iced-coffee-script": "latest"
     , "fs.extra":"latest"
   }
 }
