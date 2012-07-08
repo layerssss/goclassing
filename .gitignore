@@ -1,5 +1,5 @@
 views/*.htm
-
+libs/
 
 #################
 ## Node.js modules
