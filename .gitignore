@@ -1,5 +1,9 @@
 views/*.htm
 libs/
+app.js
+libs.js
+routes.js
+views.js
 
 #################
 ## Node.js modules
