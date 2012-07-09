@@ -1,21 +1,37 @@
 express = require('express')
 routes = require('./routes')
-fs=require('fs.extra')
+fs=require('fs')
 path=require('path')
+cp=require('child_process')
+
+
+exec=(cmd,cb)->
+  c=cp.exec cmd,{stdio: 'inherit'}
+  c.stdout.on 'data',(data)->
+    if data? and data.trim().length
+      console.log data
+  c.stderr.on 'data',(data)->
+    if data? and data.trim().length
+      console.error data
+  c.on 'exit',if cb? then cb else ()->
+
 
 switch process.argv[2]
   when 'dev'
     viewsDir=path.join __dirname,'views/'
-    fs.readdirSync(viewsDir).forEach (f)->
-      if !f.match '.jade$'
+    fs.watch viewsDir,(event, f)->
+      if !f? or !f.match '.jade$'
         return
       target=viewsDir+f.substring(0,f.length-4)+'htm'
       if fs.existsSync target
         fs.unlinkSync target
-      fs.copy path.join(__dirname,'page.debug.htm'),target
+      await exec "cp #{__dirname}/page.debug.htm #{target}",defer err
+      console.log "generated #{target}"
+    exec "cake watch"
     return
   when 'libs'
     require('./libs').get()
+    return
   when 'deploy'
     require('./libs').deploy()
     return

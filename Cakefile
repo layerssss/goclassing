@@ -1,13 +1,16 @@
 fs = require 'fs'
 coffee=require 'iced-coffee-script'
 cp=require('child_process')
+
 exec=(cmd,cb)->
-	c=cp.exec cmd,{stdio: 'inherit'}
-	c.stdout.on 'data',(data)->
-		console.log data
-	c.stderr.on 'data',(data)->
-		console.error data
-	c.on 'exit',if cb? then cb else ()->
+  c=cp.exec cmd,{stdio: 'inherit'}
+  c.stdout.on 'data',(data)->
+    if data? and data.trim().length
+      console.log data
+  c.stderr.on 'data',(data)->
+    if data? and data.trim().length
+      console.error data
+  c.on 'exit',if cb? then cb else ()->
 
 task 'build', 'compile iced-coffee-scripts', (options) ->
 	fs.readdirSync(__dirname).forEach (f)->
