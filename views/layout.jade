@@ -1,6 +1,104 @@
-!!!
-html
-  head
-    title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
-  body!= body
+!!! 5
+html(lang='en')
+head
+		meta(charset='utf-8')
+		meta(name='viewport', content='width=device-width, initial-scale=1.0')
+		meta(name='description', content='')
+		meta(name='author', content='')
+		title Goclassing.com
+		//if lt IE 9
+			script(src='//html5shim.googlecode.com/svn/trunk/html5.js')
+		link(rel='shortcut icon', href='/favicon.ico')
+		link(href='/css/StyleSheets.css', rel='stylesheet', type='text/css')
+		script(type='text/javascript', src='/js/jquery-1.7.1.min.js')
+		script(type='text/javascript', src='/js/bootstrap.min.js')
+		script(src='/js/scripts.js', type='text/javascript')
+	body
+		link(href='http://goclassing.com/css/688137.mybootstrap.css', rel='stylesheet')
+		style(type='text/css')
+			body>.container
+			{
+			padding-top: 60px;
+			}
+		.navbar.navbar-fixed-top
+			.navbar-inner
+				.container
+					a.btn.btn-navbar(data-toggle='collapse', data-target='.nav-collapse')
+						span.icon-bar
+						span.icon-bar
+						span.icon-bar
+					a.btn.btn-navbar.profile.hidden-desktop(href='/')
+						img.avatar(src='/img/signin.png', alt='Sign in')
+					a.brand.brand-gc(href='/') Goclassing
+					.nav-collapse
+						ul.nav
+							li.active
+								a(href='/')
+									i.icon-home.icon-white
+									| Home
+							li.dropdown.Default.htm.isp.js
+								a.dropdown-toggle.visible-desktop(href='#', data-toggle='dropdown')
+									i.icon-search.icon-white
+									| Browse
+									b.caret
+								ul.dropdown-menu
+									li
+										a(href='/All.users')
+											i.icon-user
+											| All Users
+									li
+										a(href='/All.courses')
+											i.icon-book
+											| All Courses
+									li
+										a(href='/tags')
+											i.icon-tags
+											| All Tags
+							li
+								form.navbar-search.pull-left(action='/Course/Search')
+									input.search-query(type='text', name='input', placeholder='Search')
+									input(type='hidden', name='redirect', value='')
+							li.divider-vertical
+							li
+								a(href='/getting_started.course')
+									i.icon-info-sign.icon-white
+									| Help
+							li.visible-desktop
+								a(href='/Mobile.htm', title='Mobile')
+									i.icon-mobile.icon-white
+						ul#slf.pull-right.nav(style='display:none;')
+							li.visible-desktop
+								a.profile(href='/')
+									img.avatar(src='http://goclassing.com/img/signin.png', alt='')
+							li
+								a.profile.name(href='/')
+									i.icon-time.icon-white
+									| loading...
+							li.dropdown
+								a.dropdown-toggle.visible-desktop(href='#', data-toggle='dropdown')
+									b.caret
+								ul.dropdown-menu
+									li
+										a(href='/Auth/Logout?redirect=%20')
+											i.icon-off
+											| Logout
+							li.offline
+								a#fb_btn(href='#')
+									span Sign in with Facebook
+		.container!=body
+			hr
+			footer
+				p
+					| © Goclassing.com 2012
+					a(href='/82.file') privacy
+					a(href='/Mobile.htm') mobile
+					a(href='https://github.com/layerssss/goclassing.com/blob/master/Default.htm.isp.js', target='_blank') source
+		#myModal.modal.fade
+			.modal-header
+				a.close(data-dismiss='modal') ×
+				h3
+					| Message
+			.modal-body
+			.modal-footer
+				a.btn.btn-primary(href='#', data-dismiss='modal') Close
+		.loading
