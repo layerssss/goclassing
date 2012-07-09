@@ -7,6 +7,6 @@
     , "jade": "latest"
     , "less": "latest"
     , "iced-coffee-script": "latest"
-    , "fs.extra":"latest"
+    , "curl":"latest"
   }
 }
