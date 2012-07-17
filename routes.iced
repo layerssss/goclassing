@@ -1,3 +1,3 @@
 exports.getRoute = (view)->
 	(req, res)->
-		res.render view, { title: 'Express' }
+		res.render view, { title: 'Express'}

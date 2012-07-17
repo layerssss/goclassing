@@ -1,12 +1,9 @@
 {
-    "name": "goclassing"
+    "name": "nodelayout"
   , "version": "0.0.1"
   , "private": true
   , "dependencies": {
-      "express": "latest"
-    , "jade": "latest"
-    , "less": "latest"
-    , "iced-coffee-script": "latest"
-    , "curl":"latest"
+      "express": "3.0.0beta7"
+    , "jade": "*"
   }
 }
