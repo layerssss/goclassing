@@ -12,7 +12,8 @@ actions=[]
 _actionCur=0
 
 #渲染Jade模版所用的数据
-data={}
+data=
+	params:$.deparam(location.search.substring(1))
 
 #当前htm文件的文件名
 _file=location.href
@@ -29,12 +30,12 @@ document.write('<link rel="stylesheet/less" type="text/plain" href="'+filename+'
 
 #将加载页面jade作为第一个action
 actions.push
-	url:"views/layout.jade"
+	url:"views/layout.jade?t=#{new Date()}"
 	dataType:'text'
 	success:(j)->
 		this.jade=j.replace /block content/g,'| !{content}'
 actions.push
-	url:"views/#{filename}.jade"
+	url:"views/#{filename}.jade?t=#{new Date()}"
 	dataType:'text'
 	success:(j)->
 		j=j.replace /extends layout/g,''
@@ -68,7 +69,7 @@ reload=()->
 		for k,v of action
 			opt[k]=v
 		if typeof(opt.url)=='function'
-			opt.url=opt.url data
+			opt.url=opt.url.call data
 		opt.url=dataBase+opt.url
 		await _ajax opt,defer d
 		action.success.call data,d
