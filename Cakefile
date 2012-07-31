@@ -5,8 +5,8 @@ cp=require('child_process')
 os=require 'os'
 watch=require 'watch'
 nodeMinify=require('node-minify')
-
-
+jade=require 'jade'
+jsyaml=require 'js-yaml'
 getDataURI=(filename)->
 	ext=path.extname(filename).substring 1
 	"data:#{contentTypes[ext]||'application/oct-stream'};base64,"+fs.readFileSync(filename).toString('base64')
@@ -76,8 +76,43 @@ task 'build', 'build everything', (options) ->
 	_proc=(dir,f,cb)->
 		if options.dev?
 			if f.match(/.jade$/)!=null and dir in ['views/']
-				await exec "cp #{__dirname}/page.debug.htm ./#{dir}#{f.replace('.jade','.htm')}",defer err
-				await exec "jade --out ./#{dir}/ ./#{dir}#{f}",defer err
+				await exec "cp #{__dirname}/page.debug.htm ./#{dir}#{f.replace('.jade','.debug.htm')}",defer err
+				console.log "compiling jade #{f}..."
+				await fs.readFile "#{__dirname}/page.static.json",'utf8',defer err,data
+				await fs.readFile "#{dir}#{f}",'utf8',defer err,template
+				await fs.readFile "#{dir}#{f.replace('.jade','.static.json')}",'utf8',defer err,json
+				try
+					data=JSON.parse data
+				catch e
+					data={}
+				data.params={}
+				data.view=f.replace('.jade','')
+				data.url=
+						path:''
+						query:''
+						host:''
+				if json
+					console.log "found json #{f.replace('.jade','.json')}..."
+					json=JSON.parse json
+					for key,value of json
+						data[key]=value
+				try
+					html=jade.compile(template,{filename:"#{dir}#{f}"})(data)
+				catch e
+					html=String(e)
+					console.error e
+				await fs.writeFile "#{dir}#{f.replace('.jade','.static.htm')}",html,'utf8',defer err
+
+			if f.match(/.yaml$/)!=null and dir in ['views/']
+				console.log "compiling #{f}..."
+				json='{}'
+				await fs.readFile "#{dir}#{f}",'utf8',defer err,yaml
+				try
+					json=JSON.stringify(jsyaml.load(yaml),null,4)
+				catch e
+					console.error e
+				await fs.writeFile "#{dir}#{f.replace('.yaml','.json')}",json,'utf8',defer err
+
 		if f.match(/.less$/)!=null and dir in ['styles/','views/']
 			await exec "lessc --include-path=./#{dir} ./#{dir}#{f} ./#{dir}#{f.replace('.less','.css')}",defer err
 
@@ -87,15 +122,15 @@ task 'build', 'build everything', (options) ->
 
 		if f.match(/.jade.js$/)!=null and dir in ['scripts/','views/']
 			await fs.readFile "./#{dir}#{f}",'utf8',defer err,data
-			await fs.readFile "./#{dir}#{f.replace(/.js$/,'')}",'utf8',defer err,jade
-			if jade
-				jade=jade.split('\n')
+			await fs.readFile "./#{dir}#{f.replace(/.js$/,'')}",'utf8',defer err,template
+			if template
+				template=template.split('\n')
 				i=0
-				while jade[i].indexOf('-')==0
+				while template[i].indexOf('-')==0
 					i++
-				jade=jade.slice(i).join '\n'
-				jade='-'+data.split('\n').slice(1).join('')+'\r\n'+jade
-				await fs.writeFile "./#{dir}#{f.replace(/.js$/,'')}",jade,'utf8',defer err
+				template=template.slice(i).join '\n'
+				template='-'+data.split('\n').slice(1).join('')+'\r\n'+template
+				await fs.writeFile "./#{dir}#{f.replace(/.js$/,'')}",template,'utf8',defer err
 
 		if f.match(/.iced$/)!=null and dir in [''] and f.match(/.debug.iced$/)==null
 			await exec "iced -c --output ./#{dir} ./#{dir}#{f}",defer err
@@ -208,6 +243,7 @@ task 'deploy','deploy the application',(options)->
 	await exec "mkdir #{dest}/views",defer()
 
 	await copy "./*.js","#{dest}/",defer err[err.length]
+	await copy "./*.xml","#{dest}/",defer err[err.length]
 	await copyDir "./node_modules","#{dest}/node_modules",defer err[err.length]
 	await copyDir "./public","#{dest}/public",defer err[err.length]
 
@@ -251,6 +287,7 @@ task 'staticify','staticalize our data',(options)->
 	if !options.dataBase?
 		console.log 'must specify option --dataBase'
 		return
+	await exec 'svn update actionList.txt',defer err
 	await fs.readFile 'actionList.txt','utf8',defer err,actions
 	actions=actions.split('\n').map (action)->
 		action.replace(/#.*/,'').trim()

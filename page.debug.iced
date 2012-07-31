@@ -16,7 +16,7 @@ _file=_file.substring(0,if i==-1 then _file.length else i)
 i=_file.indexOf('#')
 _file=_file.substring(0,if i==-1 then _file.length else i)
 filename=_file.substring(_file.lastIndexOf('/')+1)
-filename=filename.substring(0,filename.lastIndexOf('.'))
+filename=filename.replace /.debug.htm$/,''
 
 
 
@@ -51,10 +51,11 @@ reload=()->
 				opt.url=opt.url.call data
 			opt.url=dataBase+opt.url
 			await _ajax opt,defer d
-		action.success.call data,d
+		action.success.call data,d,data
 	await _ajax {url:"#{filename}.jade?t=#{new Date()}",dataType:'text'},defer template
 	$('body').html(jade.compile(template,{filename:filename+'.jade'})(data).match(/<body>((.|\r|\n)*)<\/body>/)[1])[0].onload=()->
 		$(window).trigger 'pageLoad'
+	console.log data
 
 jump=(url)->
 	location.href=url

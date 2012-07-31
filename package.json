@@ -8,5 +8,6 @@
     , "iced-coffee-script":"*"
     , "watch":"*"
     , "node-minify":"*"
+    , "js-yaml":"*"
   }
 }

@@ -4,9 +4,12 @@ fs=require('fs')
 path=require('path')
 app = module.exports = express.createServer();
 
+port=3000
+if process.argv.length>2
+	port=Number process.argv[2]
 
 app.configure ()->
-	app.set 'port', process.env.PORT || 3000
+	app.set 'port', port
 	app.set 'views', __dirname + '/views'
 	app.set 'view engine', 'jade'
 	app.use express.favicon()
@@ -33,5 +36,5 @@ views(app,routes);
 
 
 
-app.listen 3000, ()->
-	console.log "Express server listening on port %d in %s mode", 3000, app.settings.env
+app.listen port, ()->
+	console.log "Express server listening on port %d in %s mode", port, app.settings.env

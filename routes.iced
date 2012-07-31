@@ -64,7 +64,7 @@ exports.getRoute = (view,dataDefault)->
 					res.render 'error',data
 					return
 				setCookie+=if d.setCookie? then d.setCookie else ''
-			a.success.call data,d
+			a.success.call data,d,data
 		if setCookie.length
 			res.setHeader 'Set-Cookie',setCookie
 		res.setHeader 'Cache-Control','no-cache'
